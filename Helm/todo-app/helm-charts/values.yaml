@@ -1,0 +1,68 @@
+
+frontend:
+  image:
+    repository: todo-frontend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+  env: {}
+
+backend:
+  image:
+    repository: todo-backend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8080
+  env:
+    # 예: APP_ENV: "dev"
+    # 예: DB_HOST: "db.example.internal"
+    # 예: DB_NAME: "todo"
+    # 예: DB_USER: "todo_user"
+    # 비밀번호는 secret로 권장(아래 secret 섹션 참고)
+    {}
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: todo.local
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: todo-todo-app-frontend
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: todo-todo-app-backend
+            port: 8080
+  tls: []
+  # tls:
+  #   - secretName: todo-tls
+  #     hosts:
+  #       - todo.dev.example.internal
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  port: 80
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
