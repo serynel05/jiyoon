@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: 1.0.0
+description: Helm chart for Todo App (frontend + backend)
+name: todo-app
+type: application
+version: 0.1.0
